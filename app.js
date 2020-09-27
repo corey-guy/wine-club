@@ -1,13 +1,54 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+const mongo = require('mongodb');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+// mongodb initialization
+const dbHost = '127.0.0.1' //localhost
+const dbPort = 27017
+const {Db, Server} = mongo
+
+const db = new Db('local',
+	new Server(dbHost, dbPort),
+	{safe: true}
+)
+
+let db = function saveTeamToDB() {
+	db.open((error, dbConnection)) => {
+		if(error) {
+			console.error(error);
+			return process.exit();
+		}
+
+		console.log((db._state));
+		const team = {
+			league_type = 1
+			player_id = 1;
+		}
+		dbConnect
+		.collection
+		.insert(item, (error, document) => {
+			if(error) {
+				console.log(error);
+				return process.exit(1);
+			}
+			console.info('created/inserts: ', document)
+			db.close()
+			process.exit(0)
+		}
+			
+	)
+}
+//middleware function for database access
+// catch 404 and forward to error handler
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,4 +79,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+
+ 
 module.exports = app;
