@@ -16,45 +16,6 @@ const dbHost = '127.0.0.1'
 const dbPort = 27017
 const db = mongoskin.db('mongodb://${dbHost}:${dbPort}/local')
 
-db.bind('messages').bind({
-	findOneAndAddText: function(text, fn) {
-		this.findOne({}, (error, document) => {
-			if(error) {
-				console.error(error)
-				return process.exit(1)
-			}
-			console.info('findOne: ', document)
-			document.text = text
-			var id = document._id.toString() // store ID in string
-			console.info('before saving: ' , document) 
-			this.save(document, (error, count) => {
-				if(error) {
-					console.error(error)
-					return process.exit(1)
-				}
-
-				console.info('save: ', count)
-				return fn(count, id)
-			})
-		})
-	}
-})
-
-
-//use of function findOneAndAddText
-db.messages.findOneAndAddText('hi', (count, id) => {
-	db.messages.find({
-		_id: toObjectID(id)
-	}).toArray((error, documents) => {
-		if(error) {
-			console.error(error)
-			return process.exit(1)
-		}
-		console.info('find: ', documents)
-		db.close()
-		process.exit(1);
-	})
-})
 //middleware function for database access
 // catch 404 and forward to error handler
 
