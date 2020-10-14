@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Call of Duty Wine Club</title>
+    <link rel="stylesheet" href="./styles/style.css"/>
+  </head>
+  <body>
+    <script type="module">
+        import { FileSearch } from "./modules/filesearch.js";
+        const _fileSearch = new FileSearch();
+    </script>
+    <main>
+        <h1>Which string would you like to search for?</h1>
+        <textarea id='filesearch_text' readOnly='true'></textarea>
+        <div id='div_search'>
+            <input type='text' id='input_search'>
+            <input type='button' id='button_search_sensitive' value="case sensitive">
+            <input type='button' id='button_search_insensitive' value="case insensitive">
+            <input type='text' readOnly='true' id='display_count'>
+        </div>
+    <footer>
+        <div>
+            Call of Duty and Wine Club - Copyright 2020 Corey Drees - CS602 Server Side Web Programming
+        </div>
+    </footer>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-const mongo = require('mongodb');
+const mongo = require('mongoskin');
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -10,42 +10,51 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
-// mongodb initialization
-const dbHost = '127.0.0.1' //localhost
+// mongoskin initialization
+const { toObjectID } = mongoskin.helper
+const dbHost = '127.0.0.1'
 const dbPort = 27017
-const {Db, Server} = mongo
+const db = mongoskin.db('mongodb://${dbHost}:${dbPort}/local')
 
-const db = new Db('local',
-	new Server(dbHost, dbPort),
-	{safe: true}
-)
-
-let db = function saveTeamToDB() {
-	db.open((error, dbConnection)) => {
-		if(error) {
-			console.error(error);
-			return process.exit();
-		}
-
-		console.log((db._state));
-		const team = {
-			league_type = 1
-			player_id = 1;
-		}
-		dbConnect
-		.collection
-		.insert(item, (error, document) => {
+db.bind('messages').bind({
+	findOneAndAddText: function(text, fn) {
+		this.findOne({}, (error, document) => {
 			if(error) {
-				console.log(error);
-				return process.exit(1);
+				console.error(error)
+				return process.exit(1)
 			}
-			console.info('created/inserts: ', document)
-			db.close()
-			process.exit(0)
+			console.info('findOne: ', document)
+			document.text = text
+			var id = document._id.toString() // store ID in string
+			console.info('before saving: ' , document) 
+			this.save(document, (error, count) => {
+				if(error) {
+					console.error(error)
+					return process.exit(1)
+				}
+
+				console.info('save: ', count)
+				return fn(count, id)
+			})
+		})
+	}
+})
+
+
+//use of function findOneAndAddText
+db.messages.findOneAndAddText('hi', (count, id) => {
+	db.messages.find({
+		_id: toObjectID(id)
+	}).toArray((error, documents) => {
+		if(error) {
+			console.error(error)
+			return process.exit(1)
 		}
-			
-	)
-}
+		console.info('find: ', documents)
+		db.close()
+		process.exit(1);
+	})
+})
 //middleware function for database access
 // catch 404 and forward to error handler
 
