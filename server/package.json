@@ -8,15 +8,19 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "body-parser": "^1.13.2",
+    "connect-ensure-login": "^0.1.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "^4.17.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "mongodb": "3.6.2",
+    "mongoose": "^5.10.9",
     "morgan": "~1.9.1",
     "node": "^14.13.1",
     "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0",
     "qs": "^6.9.4"
   },
   "author": "Corey Drees"

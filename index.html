@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Call of Duty Wine Club</title>
+    <link rel="stylesheet" href="./styles/style.css"/>
+  </head>
+  <body>
+    <script type="module">
+        import { WineClub } from "./modules/wineclub.js";
+        const _wineclub = new WineClub();
+
+     window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '3564086716947457',
+          cookie     : true,
+          xfbml      : true,
+          version    : 'v8.0'
+        });
+          
+        FB.AppEvents.logPageView();   
+          
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "https://connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+
+
+        FB.getLoginStatus(function(response) {
+            console.log("tehe");
+            statusChangeCallback(response);
+        });
+      </script>
+    <main>
+        <h1>Please Log In!</h1>
+    </main>
+    <footer>
+        <div>
+            Call of Duty and Wine Club - Copyright 2020 Corey Drees - CS602 Server Side Web Programming
+        </div>
+    </footer>
+  </body>
+</html>
