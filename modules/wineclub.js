@@ -1,31 +1,60 @@
 class WineClub {
 
 	constructor() {
-		//make a call to get file data from server
-		this.getFileDataText();
-		
-		
+			
 		//setup our onclick listener for the search button
 		window.addEventListener("DOMContentLoaded", (event) => {
-
-            // Setup the onclick callbacks for the main save buton
-            const searchButton = document.querySelector("#button_search_sensitive");
-            searchButton.addEventListener("click", event => {
-                console.log("Calling server for sensitive search");
- 				this.searchFileDataText(true);
-            });
-
-            // Setup the onclick callbacks for the main save buton
-            const searchButton2 = document.querySelector("#button_search_insensitive");
-            searchButton2.addEventListener("click", event => {
-                console.log("Calling server for insensitive search");
- 				this.searchFileDataText(false);
-            });
-
+			var login_button = document.querySelector("#login_button");
+			console.log(login_button);
+			$("#login_button").on("click", () => {
+				console.log("click log in");
+				this.loadAppHome()
+			});
         });
 
 	}
 
+	loadAppHome() {
+		this.loadNavigation();
+		console.log("league home");
+		$("#main_div").html("thou shalt join the club");
+	}
+
+	loadNavigation() {
+		let htmlList = "<ul><li id='cc'><a>Club Calendar</a></li><li id='cr'>Club Roster</li><li id='ayw'>Adjust Your Week</li></ul>";
+		$("#navigation_div").html(htmlList)
+		//set on clickers
+		$("#cc").on("click", () => {
+			console.log("clicked cc");
+			this.loadClubCalendar();
+		})
+
+		$("#cr").on("click", () => {
+			console.log("clicked cc");
+			this.loadClubRoster();
+		})
+
+		$("#ayw").on("click", () => {
+			console.log("clicked cc");
+			this.loadAdjustYourWeek();
+		})
+
+
+	}
+
+	loadClubCalendar() {
+		//todo
+
+	}
+
+	loadClubRoster() {
+		//todo
+		
+	}
+
+	loadAdjustYourWeek() {
+		//todo
+	}
 	//--------------------------------- API -----------------------------//
 	
 	/*
