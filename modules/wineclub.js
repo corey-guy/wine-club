@@ -82,33 +82,34 @@ class WineClub {
 	}
 	//--------------------------------- API -----------------------------//
 	
-	/*
-	createClub() {
-		console.log("getFileDataText");
+	
+	createClub(club) {
+		console.log("generating createClub call to server");
 		
-		const getRequest = new Request("http://localhost:3000/text/", {
-			method: "GET",
+		const postRequest = new Request("http://localhost:3000/club/", {
+			method: "POST",
 			mode: "cors",
 			redirect: "follow",
 			credentials: "include",
-			headers: new Headers({ "Content-Type": "text/plain" })
+			headers: new Headers({ "Content-Type": "text/plain" }),
+			body: JSON.stringify(club)
 		});
 
-		fetch(getRequest)
+		fetch(postRequest)
 			.then(response => {
 				return response.json();
 			})
 			.then(data => {
-				let textArea = document.querySelector('#filesearch_text');
-				textArea.value = data.text;
+				console.log(data);
+				console.log("posted");
 				
 			})
 			.catch(errors => {
-				console.log(`Could not post new entry: ${errors}`);
+				console.log(`Could not post new club: ${errors}`);
 		});
 		
 	}
-	*/
+	
 
 	/*
 	searchFileDataText(caseSensitive) {

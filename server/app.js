@@ -142,5 +142,9 @@ app.get("/users", (req, resp) => {
     resp.status(200).json(users);
   })
 });
- 
+
+app.post("/club", (req, resp) => {
+  console.log("you've hit the club endpoint");
+});
+
 module.exports = app;
