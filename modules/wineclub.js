@@ -45,11 +45,15 @@ class WineClub {
 		$("#main_div").load("./views/createOrJoin.html");
 
 		$(document).on("click", "#createleague",  () => {
-			console.log("create league");
+			this.loadCreateLeagueForm();
 		})
 		$(document).on("click", "#joinleague", () => {
 			console.log("join league");
 		})
+	}
+
+	loadCreateLeagueForm() {
+		$("#main_div").load("./views/createLeagueForm.html");
 	}
 
 	loadClubCalendar() {
