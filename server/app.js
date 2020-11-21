@@ -2,6 +2,7 @@
 const express = require("express");
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const cors = require("cors");
 const mongoose = require('mongoose');
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook');
@@ -15,7 +16,8 @@ const port = 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -55,6 +57,8 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
   }
 }
+
+app.use(cors(corsOptions));
 
 passport.serializeUser(function(user, done) {
   done(null, user);
@@ -129,9 +133,6 @@ app.get('/profile',
   function(req, res) {
     res.render('profile', {user: req.user});
   });
-app.listen(port, () =>{
-    console.info(`Application Started.  Port: ${port}`)
-});
 
 app.get("/users", (req, resp) => {
 
@@ -143,8 +144,20 @@ app.get("/users", (req, resp) => {
   })
 });
 
-app.post("/club", (req, resp) => {
-  console.log("you've hit the club endpoint");
+app.post('/', function(req, res) {
+  console.log("middleware");
+  res.send('welcome to express');
 });
 
+app.post("/club", (req, resp) => {
+  console.log("you've hit the club endpoint");
+  //console.log(req);
+  let body = req.body;
+  console.log(body);
+  resp.status(200).json();
+});
+
+app.listen(port, () =>{
+    console.info(`Application Started.  Port: ${port}`)
+});
 module.exports = app;

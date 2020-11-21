@@ -85,13 +85,14 @@ class WineClub {
 	
 	createClub(club) {
 		console.log("generating createClub call to server");
-		
-		const postRequest = new Request("http://localhost:3000/club/", {
+		console.log(JSON.stringify(club));
+
+		const postRequest = new Request("http://localhost:3000/club", {
 			method: "POST",
 			mode: "cors",
 			redirect: "follow",
 			credentials: "include",
-			headers: new Headers({ "Content-Type": "text/plain" }),
+			headers: new Headers({ "Content-Type": "application/json" }),
 			body: JSON.stringify(club)
 		});
 
