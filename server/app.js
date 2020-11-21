@@ -1,10 +1,11 @@
+
 const express = require("express");
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook');
-
+let facebookSecret = require('./facebookSecret');
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
 
@@ -64,8 +65,8 @@ passport.deserializeUser(function(ojb, done) {
 });
 
 passport.use(new FacebookStrategy({
-    clientID: '',
-    clientSecret: '',
+    clientID: facebookSecret.clientID,
+    clientSecret: facebookSecret.clientSecret,
     callbackURL: "http://localhost:3000/auth/facebook/callback",
     profileFields: ["email", "name"]
   },

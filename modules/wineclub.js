@@ -8,16 +8,15 @@ class WineClub {
 			console.log(login_button);
 			$("#login_button").on("click", () => {
 				console.log("click log in");
-				this.loadAppHome()
+				this.loadAppStart()
 			});
         });
 
 	}
 
-	loadAppHome() {
-		this.loadNavigation();
+	loadAppStart() {
+		this.loadCreateOrJoin();
 		console.log("league home");
-		$("#main_div").html("thou shalt join the club");
 	}
 
 	loadNavigation() {
@@ -40,6 +39,23 @@ class WineClub {
 		})
 
 
+	}
+
+	loadCreateOrJoin() {
+		let htmlButton1 = '<div class="box-1">' +
+						  '<div class="btn btn-one">' +
+						    '<span>CREATE LEAGUE</span>' +
+						  '</div>' +
+						  '</div>';
+
+	 	let htmlButton2 = '<div class="box-1">' +
+						  '<div class="btn btn-one">' +
+						    '<span>JOIN LEAGUE</span>' +
+						  '</div>' +
+						  '</div>';
+
+		let htmlButtons = htmlButton1 + htmlButton2;
+		$("#main_div").html(htmlButtons);
 	}
 
 	loadClubCalendar() {
