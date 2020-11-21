@@ -1,21 +1,21 @@
 <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-4ZPLezkTZTsojWFhpdFembdzFudphhoOzIunR1wH6g1WQDzCAiPvDyitaK67mp0+" crossorigin="anonymous">
 
-<form class="pure-form pure-form-stacked">
+<form class="pure-form pure-form-stacked" id="createform">
     <fieldset>
         <legend>Create Club</legend>
         <!-- NAME -->
         <label for="stacked-clubname">Club Name</label>
-        <input type="clubname" id="stacked-clubname" placeholder="clubname" required="true"/>
+        <input type="clubname" id="stacked-clubname" name="clubname" placeholder="clubname" required="true"/>
 
         <!-- GAME -->
         <label for="stacked-game">Game</label>
-        <select id="stacked-game">
+        <select id="stacked-game" name="game">
             <option>Call of Duty: Cold War</option>
         </select>
 
         <!-- START DATE -->
         <label for="stacked-startdate">Club Start Date</label>
-        <input type="date" id="stacked-startdate" placeholder="Start" required="true"/>
+        <input type="date" id="stacked-startdate" name="startdate" placeholder="Start" required="true"/>
 
         <!-- WEEKS -->
         <label for="stacked-numweeks">Number of Weeks (1-52)</label>

@@ -1,3 +1,5 @@
+import Club from './club.js';
+
 class WineClub {
 
 	constructor() {
@@ -54,6 +56,15 @@ class WineClub {
 
 	loadCreateLeagueForm() {
 		$("#main_div").load("./views/createLeagueForm.html");
+
+		$(document).on('submit', '#createform', (event) => {
+			event.preventDefault();
+			//create club Object
+			const formData = $("#createform").serializeArray();
+			let newClub = new Club(formData[0].value, formData[1].value,
+								 formData[2].value, formData[3].value);
+			this.createClub(newClub)
+		})
 	}
 
 	loadClubCalendar() {
@@ -72,7 +83,7 @@ class WineClub {
 	//--------------------------------- API -----------------------------//
 	
 	/*
-	getFileDataText() {
+	createClub() {
 		console.log("getFileDataText");
 		
 		const getRequest = new Request("http://localhost:3000/text/", {
