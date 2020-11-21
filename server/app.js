@@ -26,9 +26,15 @@ const mongo = require('mongodb');
 const dbUrl = 'mongodb://localhost:27017/users'
 mongoose.connect(dbUrl, {useNewUrlParse: true});
 const db = mongoose.connection;
+const db2 = db.useDb('clubs');
 
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
+  console.log("we are connected!");
+})
+
+db2.on('error', console.error.bind(console, 'connection error:'));
+db2.once('open', function() {
   console.log("we are connected!");
 })
 
@@ -40,7 +46,17 @@ const userSchema = new mongoose.Schema({
   seasons: []
 })
 
+
 const User = mongoose.model('User', userSchema);
+
+const clubSchema = new mongoose.Schema({
+  name: String,
+  game: String,
+  startdate: String,
+  numWeeks: String
+})
+
+const Club = mongoose.model('Club', clubSchema);
 
 //Set up Cors
 const whitelist = ['http://localhost', 
@@ -154,6 +170,29 @@ app.post("/club", (req, resp) => {
   //console.log(req);
   let body = req.body;
   console.log(body);
+  Club.findOne({ name: req.body.name }, function(err, club) {
+      if(err) return console.log(err);
+      if(club == null) {
+
+        const new_club = 
+                new Club({
+                          name: req.body.name, 
+                          game: req.body.game,
+                          startdate: req.body.startDate,
+                          numWeeks: req.body.numWeeks
+                });
+
+        new_club.save(function (err, club) {
+          if(err) return console.log(err);
+          console.log(club);
+          console.log("new club saved!");
+        })
+
+      }
+      else {
+        console.log("this club with club name has already been created");
+      }
+   });
   resp.status(200).json();
 });
 
