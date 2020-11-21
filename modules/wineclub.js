@@ -42,20 +42,14 @@ class WineClub {
 	}
 
 	loadCreateOrJoin() {
-		let htmlButton1 = '<div class="box-1">' +
-						  '<div class="btn btn-one">' +
-						    '<span>CREATE LEAGUE</span>' +
-						  '</div>' +
-						  '</div>';
+		$("#main_div").load("./views/createOrJoin.html");
 
-	 	let htmlButton2 = '<div class="box-1">' +
-						  '<div class="btn btn-one">' +
-						    '<span>JOIN LEAGUE</span>' +
-						  '</div>' +
-						  '</div>';
-
-		let htmlButtons = htmlButton1 + htmlButton2;
-		$("#main_div").html(htmlButtons);
+		$(document).on("click", "#createleague",  () => {
+			console.log("create league");
+		})
+		$(document).on("click", "#joinleague", () => {
+			console.log("join league");
+		})
 	}
 
 	loadClubCalendar() {
