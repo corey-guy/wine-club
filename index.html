@@ -4,26 +4,26 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Call of Duty Wine Club</title>
-    <link rel="stylesheet" href="./styles/style.css"/>
+    <link rel="stylesheet" href="/styles/style.css"/>
     <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/base-min.css">
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
   </head>
   <body>
     <script type="module">
-        import { WineClub } from "./modules/wineclub.js";
-        const _wineclub = new WineClub();
+      import { WineClub } from "/modules/wineclub.js";
+      const _wineclub = new WineClub();
 
-     window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '3564086716947457',
-          cookie     : true,
-          xfbml      : true,
-          version    : 'v8.0'
-        });
-          
-        FB.AppEvents.logPageView();   
-          
-      };
+       window.fbAsyncInit = function() {
+          FB.init({
+            appId      : '3564086716947457',
+            cookie     : true,
+            xfbml      : true,
+            version    : 'v8.0'
+          });
+            
+          FB.AppEvents.logPageView();   
+            
+        };
 
       (function(d, s, id){
          var js, fjs = d.getElementsByTagName(s)[0];
@@ -33,11 +33,12 @@
          fjs.parentNode.insertBefore(js, fjs);
        }(document, 'script', 'facebook-jssdk'));
 
-
-        FB.getLoginStatus(function(response) {
-            console.log("tehe");
-            statusChangeCallback(response);
-        });
+      
+      /*FB.getLoginStatus(function(response) {
+          console.log("tehe");
+          statusChangeCallback(response);
+      });
+      */
       </script>
     <main>
       <div id="navigation_div">
@@ -45,6 +46,9 @@
       <div id="main_div">
         <h1>Please Log In!</h1>
         <input type="button" id="login_button" value="Log In">
+        <a href="http://localhost:3000/auth/facebook" class="waves-effect waves-light btn social facebook">
+                <i class="fa fa-facebook"></i> Sign in with mark zuckerbergs evil empire
+              </a>
       </div>
     </main>
     <footer>
