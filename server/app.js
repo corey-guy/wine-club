@@ -6,6 +6,9 @@ const cors = require("cors");
 const mongoose = require('mongoose');
 const passport = require('passport');
 const FacebookStrategy = require('passport-facebook');
+const session = require("express-session");
+const dns = require('dns')
+
 let facebookSecret = require('./facebookSecret');
 let indexRouter = require('./routes/index');
 let usersRouter = require('./routes/users');
@@ -20,6 +23,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(session({
+    secret: "wineclub",
+    resave: false,
+    saveUninitialized: true
+ }));
 
 /* DATABASE */
 const mongo = require('mongodb');
@@ -43,7 +51,8 @@ const userSchema = new mongoose.Schema({
   fb_id: String,
   username: String,
   email: String,
-  seasons: []
+  password: String,
+  clubs: []
 })
 
 
@@ -61,12 +70,13 @@ const Club = mongoose.model('Club', clubSchema);
 //Set up Cors
 const whitelist = ['http://localhost', 
                    'http://localhost:3000', 
-                   'http://localhost:8000'];
+                   'http://localhost:8000',
+                   'http://127.0.0.1:8000'];
 
 const corsOptions = {
   credentials: true, 
   origin: (origin, callback) => {
-      console.log(origin);
+      console.log("origin:" + origin);
       if ( whitelist.includes(origin) ) {
           return callback(null, true)
       }
@@ -113,6 +123,7 @@ passport.use(new FacebookStrategy({
         user.username = profile._json.first_name;
         user.save();
       }
+      console.log("passport function exit");
    });
 
 
@@ -125,10 +136,10 @@ passport.use(new FacebookStrategy({
 
 
 app.get('/auth/facebook',
-  passport.authenticate('facebook'));
+  passport.authenticate('facebook'))
 
 app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  passport.authenticate('facebook', { failureRedirect: '/fail' }),
   function(req, res) {
     // Successful authentication, redirect home.
     console.log('successful facebook auth');
@@ -165,6 +176,34 @@ app.post('/', function(req, res) {
   res.send('welcome to express');
 });
 
+app.post("/user", (req, resp) => {
+  console.log("you've hit the user endpoint");
+  let body = req.body;
+  console.log(body);
+  
+  User.findOne({ username: req.body.username }, function(err, user) {
+    if(err) return console.log(err);
+    if(user == null) {
+      const new_user = new User({ fb_id: null,
+                                  username: req.body.username,
+                                  email: req.body.email,
+                                  password: req.body.password});
+      new_user.save(function (err, user) {
+        if(err) return console.log(err);
+        console.log(user);
+        console.log("new user saved!");
+      })
+
+      resp.status(200).json(body);
+    }
+    else {
+      console.log("this user with this username has already been created");
+      resp.status(403).json("error");
+    }
+  })
+
+});
+
 app.post("/club", (req, resp) => {
   console.log("you've hit the club endpoint");
   //console.log(req);
@@ -179,7 +218,8 @@ app.post("/club", (req, resp) => {
                           name: req.body.name, 
                           game: req.body.game,
                           startdate: req.body.startDate,
-                          numWeeks: req.body.numWeeks
+                          numWeeks: req.body.numWeeks,
+
                 });
 
         new_club.save(function (err, club) {
@@ -196,7 +236,16 @@ app.post("/club", (req, resp) => {
   resp.status(200).json();
 });
 
+app.get('/clubs', function(req, res) {
+  console.log("get clubs");
+  resp.status(200).json();
+})
+
+
 app.listen(port, () =>{
-    console.info(`Application Started.  Port: ${port}`)
+    dns.lookup('graph.facebook.com', console.log)
+    console.info(`Application Started.  Port: ${port}`);
+    console.info(`facebookSecret.clientID: ${facebookSecret.clientID}`);
+    console.info(`facebookSecret.clientSecret: ${facebookSecret.clientSecret}`);
 });
 module.exports = app;
