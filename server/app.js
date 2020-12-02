@@ -193,6 +193,7 @@ app.post("/user", (req, resp) => {
         console.log(user);
         console.log("new user saved!");
       })
+      //TODO: set session for user
 
       resp.status(200).json(body);
     }
@@ -201,7 +202,24 @@ app.post("/user", (req, resp) => {
       resp.status(403).json("error");
     }
   })
+});
 
+app.post("/authUser", (req, resp) => {
+  console.log("hit auth user endpoint");
+  let user = req.body;
+  console.log(user);
+
+  User.findOne({ username: req.body.username, password: req.body.password }, function(err, user) {
+    if(err) return console.log(err);
+    if(user == null) {
+      resp.status(403).json("error");
+    }
+    else {
+      console.log("login successful for: " + req.body.username);
+      //TODO: set session for user
+      resp.status(200).json(req.body);
+    }
+  })
 });
 
 app.post("/club", (req, resp) => {
@@ -218,8 +236,7 @@ app.post("/club", (req, resp) => {
                           name: req.body.name, 
                           game: req.body.game,
                           startdate: req.body.startDate,
-                          numWeeks: req.body.numWeeks,
-
+                          numWeeks: req.body.numWeeks
                 });
 
         new_club.save(function (err, club) {

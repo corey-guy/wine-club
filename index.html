@@ -45,9 +45,25 @@
       </div>
       <div id="main_div">
         <h1>Please Log In!</h1>
+        <form class="pure-form pure-form-stacked" id="loginform">
+          <fieldset>
+              <legend>Register</legend>
+              <!-- USERNAME -->
+              <label for="stacked-username">Username</label>
+              <input type="username" id="stacked-username" name="username" placeholder="username" required="true"/>
+              <!-- PASSWORD -->
+              <label for="stacked-password">Password</label>
+              <input type="password" id="stacked-password" name="password" placeholder="password" required="true"/>
+
+              <!-- SUBMIT -->
+              <button type="submit" class="pure-button pure-button-primary">Log In</button>
+          </fieldset>   
+      </form>
+      <div id="login_error_bar">
+      </div>
         <input type="button" id="login_button" value="Log In">
         <a href="http://localhost:3000/auth/facebook" class="waves-effect waves-light btn social facebook">
-                <i class="fa fa-facebook"></i> Sign in with mark zuckerbergs evil empire
+                <i class="fa fa-facebook"></i> Sign in with Facebook
         </a>
 
         <h1>Don't have an account? Register here</h1>

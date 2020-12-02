@@ -7,13 +7,13 @@ class WineClub {
 			
 		//setup our onclick listener for the login button
 		window.addEventListener("DOMContentLoaded", (event) => {
-			var login_button = document.querySelector("#login_button");
-			console.log(login_button);
-			$("#login_button").on("click", () => {
-				console.log("click log in");
-				//make call to facebook login
-				this.authFacebook();
-				this.loadAppStart();
+
+			$(document).on("submit", "#loginform", (event) => {
+				console.log("submit login");
+
+				$("#login_error_bar").empty();
+				event.preventDefault();
+				this.login();
 			});
 
 			$("#register_button").on("click", () => {
@@ -53,6 +53,16 @@ class WineClub {
 
 	}
 */
+	
+	login() {		
+		//if success
+
+		const formData = $("#loginform").serializeArray();
+		
+		let user = new User(formData[0].value, "", formData[1].value);
+		console.log(user);
+		this.authUser(user);
+	}
 
 	loadRegistration() {
 		$("#main_div").load("./views/registration.html");
@@ -174,6 +184,41 @@ class WineClub {
 				console.log(`Could not post new club: ${errors}`);
 		});
 		
+	}
+
+	authUser(user) {
+		console.log("auth user");
+
+		const postRequest = new Request("http://localhost:3000/authUser", {
+			method: "POST",
+			mode: "cors",
+			redirect: "follow",
+			credentials: "include",
+			headers: new Headers({ "Content-Type": "application/json" }),
+			body: JSON.stringify(user)
+		});
+
+		fetch(postRequest)
+			.then(response => {
+				return response.json();
+			})
+			.then(data => {
+				console.log(data);
+				
+				if(data == "error") {
+					console.log("Login Credentials Invalid");
+					$("#login_error_bar").load("./views/loginInvalid.html");
+				}
+				else {
+					console.log("sucessful login");
+					this.loadAppStart();
+				}
+				
+				
+			})
+			.catch(errors => {
+				console.log(`Could not login: ${errors}`);
+		});
 	}
 
 	createUser(user) {
