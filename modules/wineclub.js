@@ -135,12 +135,36 @@ class WineClub {
 
 	loadClubHome(id) {
 		//TODO
-		let data = this.getClub(id);
+		this.loadClubById(id);
 
 	}
 
 	//--------------------------------- API -----------------------------//
+	
+	loadClubById(id) {
+		const getRequest = new Request("http://localhost:3000/club/" + id, {
+			method: "GET",
+			mode: "cors",
+			redirect: "follow",
+			credentials: "include",
+			headers: new Headers({ "Content-Type": "application/json" })
+		});
+
+		fetch(getRequest)
+			.then(response => {
+				return response.json();
+			})
+			.then(data => {
+				console.log(data);
+				console.log("get club request complete");
+				$("#main_div").html(`Club name: ${data.name} <br> Club game: ${data.game} <br> Start date: ${data.startdate}`)
+			})
+			.catch(errors => {
+				console.log(`could not get club: ${errors}`);
+			});
 		
+	}
+
 	authFacebook() {
 		console.log("facebook auth call ");
 

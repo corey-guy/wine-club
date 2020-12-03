@@ -255,6 +255,7 @@ app.post("/club", (req, resp) => {
                           numWeeks: req.body.numWeeks,
                           owner: req.session.data.username
                 });
+
         new_club.members.push(req.session.data.username);
 
         new_club.save(function (err, club) {
@@ -271,10 +272,24 @@ app.post("/club", (req, resp) => {
    });
 });
 
+app.get('/club/:id', function(req, res) {
+    console.log(req.params.id);
+    Club.findOne({ _id: req.params.id }, function(err, club) {
+      if(err) return console.log(err);
+      if(club == null) {
+        //this shouldn't happen
+        res.status(403).json("error");
+      }
+      else {
+        res.status(200).json(club);
+      }
+    });
+});
+
 app.get('/clubs', function(req, res) {
   console.log("get clubs");
-  resp.status(200).json();
-})
+  res.status(200).json();
+});
 
 
 app.listen(port, () =>{
