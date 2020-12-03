@@ -89,7 +89,7 @@ class WineClub {
 		$("#main_div").load("./views/navigation.html");
 
 		$(document).on("click", "#createclub",  () => {
-			this.loadCreateLeagueForm();
+			this.loadCreateClubForm();
 		})
 		$(document).on("click", "#joinclub", () => {
 			console.log("join league");
@@ -99,10 +99,11 @@ class WineClub {
 		})
 	}
 
-	loadCreateLeagueForm() {
-		$("#main_div").load("./views/createLeagueForm.html");
+	loadCreateClubForm() {
+		$("#main_div").load("./views/createClubForm.html");
 
 		$(document).on('submit', '#createform', (event) => {
+			$("#club_error_bar").empty();
 			event.preventDefault();
 			//create club Object
 			const formData = $("#createform").serializeArray();
@@ -131,6 +132,13 @@ class WineClub {
 	loadAdjustYourWeek() {
 		//todo
 	}
+
+	loadClubHome(id) {
+		//TODO
+		let data = this.getClub(id);
+
+	}
+
 	//--------------------------------- API -----------------------------//
 		
 	authFacebook() {
@@ -177,7 +185,15 @@ class WineClub {
 			})
 			.then(data => {
 				console.log(data);
-				console.log("posted new club");
+				if(data == "error") {
+					console.log("club already exists, choose a new name");
+					$("#club_error_bar").load("./views/clubNameInvalid.html");
+				}
+				else {
+					console.log("posted new club");
+					console.log(data);
+					this.loadClubHome(data._id);
+				}
 				
 			})
 			.catch(errors => {
@@ -211,6 +227,7 @@ class WineClub {
 				}
 				else {
 					console.log("sucessful login");
+					console.log(data);
 					this.loadAppStart();
 				}
 				
@@ -276,49 +293,6 @@ class WineClub {
 				console.log(`could not post new entry: ${errors}`);
 			})
 	}
-
-	/*
-	searchFileDataText(caseSensitive) {
-
-
-		//grab text
-		let searchText = document.querySelector('#input_search');
-
-		//trim it
-		let trimmedSearchText = searchText.value.trim();
-
-		//make sure it's not blank
-		if(!trimmedSearchText) {
-			console.log("blank!");
-			searchText.value = "Enter something here! No blank spaces.";
-		}
-		else {
-			//make the web service call
-			const getRequest = new Request(`http://localhost:3000/search/${trimmedSearchText}/${caseSensitive}`, {
-				method: "GET",
-				mode: "cors",
-				redirect: "follow",
-				credentials: "include",
-				headers: new Headers({ "Content-Type": "text/plain" })
-			});
-
-			fetch(getRequest)
-				.then(response => {
-					return response.json();
-				})
-				.then(data => {
-					console.log(data);
-					let displayArea = document.querySelector('#display_count');
-					displayArea.value = `This phrased showed up ${data.frequency} times!`
-				})
-				.catch(errors => {
-					console.log(`Could not post new entry: ${errors}`);
-				})
-		}
-
-
-	}
-	*/
 }
 
 export { WineClub };

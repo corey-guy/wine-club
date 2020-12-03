@@ -62,7 +62,9 @@ const clubSchema = new mongoose.Schema({
   name: String,
   game: String,
   startdate: String,
-  numWeeks: String
+  numWeeks: String,
+  owner: String,
+  members: []
 })
 
 const Club = mongoose.model('Club', clubSchema);
@@ -71,6 +73,7 @@ const Club = mongoose.model('Club', clubSchema);
 const whitelist = ['http://localhost', 
                    'http://localhost:3000', 
                    'http://localhost:8000',
+                   'http://localhost:80',
                    'http://127.0.0.1:8000'];
 
 const corsOptions = {
@@ -193,9 +196,9 @@ app.post("/user", (req, resp) => {
         console.log(user);
         console.log("new user saved!");
       })
-      //TODO: set session for user
-
-      resp.status(200).json(body);
+      setSessionUsername(req, req.body.username);
+      
+      resp.status(200).json(req.session.data);
     }
     else {
       console.log("this user with this username has already been created");
@@ -216,11 +219,24 @@ app.post("/authUser", (req, resp) => {
     }
     else {
       console.log("login successful for: " + req.body.username);
-      //TODO: set session for user
-      resp.status(200).json(req.body);
+      
+      setSessionUsername(req, req.body.username);
+
+      resp.status(200).json(req.session.data);
     }
   })
 });
+
+function setSessionUsername(req, username) {
+  if(!req.session.data) {
+    req.session.data = [];
+    console.log("initializing session data");
+  }
+        
+  let data = { username: username };
+  req.session.data = data;
+  console.log(req.session.data);
+}
 
 app.post("/club", (req, resp) => {
   console.log("you've hit the club endpoint");
@@ -236,21 +252,22 @@ app.post("/club", (req, resp) => {
                           name: req.body.name, 
                           game: req.body.game,
                           startdate: req.body.startDate,
-                          numWeeks: req.body.numWeeks
+                          numWeeks: req.body.numWeeks,
+                          owner: req.body.owner
                 });
 
         new_club.save(function (err, club) {
           if(err) return console.log(err);
           console.log(club);
           console.log("new club saved!");
+          resp.status(200).json(club);
         })
-
       }
       else {
         console.log("this club with club name has already been created");
+          resp.status(403).json("error");
       }
    });
-  resp.status(200).json();
 });
 
 app.get('/clubs', function(req, res) {
