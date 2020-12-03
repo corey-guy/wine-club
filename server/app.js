@@ -64,7 +64,7 @@ const clubSchema = new mongoose.Schema({
   startdate: String,
   numWeeks: String,
   owner: String,
-  members: []
+  members: [String]
 })
 
 const Club = mongoose.model('Club', clubSchema);
@@ -197,7 +197,7 @@ app.post("/user", (req, resp) => {
         console.log("new user saved!");
       })
       setSessionUsername(req, req.body.username);
-      
+
       resp.status(200).json(req.session.data);
     }
     else {
@@ -253,8 +253,9 @@ app.post("/club", (req, resp) => {
                           game: req.body.game,
                           startdate: req.body.startDate,
                           numWeeks: req.body.numWeeks,
-                          owner: req.body.owner
+                          owner: req.session.data.username
                 });
+        new_club.members.push(req.session.data.username);
 
         new_club.save(function (err, club) {
           if(err) return console.log(err);
