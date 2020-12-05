@@ -105,17 +105,37 @@ class WineClub {
 		$(document).on('submit', '#createform', (event) => {
 			$("#club_error_bar").empty();
 			event.preventDefault();
+
 			//create club Object
 			const formData = $("#createform").serializeArray();
-			let newClub = new Club(formData[0].value, formData[1].value,
-								 formData[2].value, formData[3].value);
-			this.createClub(newClub)
+
+			if(formData[0].value.includes(`_`)) {
+				$("#club_error_bar").load("./views/usernameHasUnderscores.html");
+			}
+			else {
+				let newClub = new Club(formData[0].value, formData[1].value,
+									 formData[2].value, formData[3].value);
+				this.createClub(newClub);
+			}
 		})
 	}
 
-	showMyClubs() {
+	async showMyClubs() {
 		console.log("show my clubs");
-		this.getClubsByLoggedInUser();
+		let clubs = await this.getClubsByLoggedInUser();
+		//form list
+		$("#main_div").load("./views/clubList.html", function() {
+			$("#clublistdiv").append("<ul id='clubList'></ul");
+			clubs.forEach(function (club) {
+				let clubId = club.name.split(' ').join('_');
+				$("#clubList").append(`<li id=${clubId}> ${club.name} </li>`);
+				//TODO - ADD EVENT HANDLERS FOR CLUB CLICKING
+			});
+			if(clubs.length == 0) {
+				$("#clubList").append(`you do not have any clubs`);
+			}
+			console.log("Added club list");
+		});
 
 	}
 
@@ -297,25 +317,29 @@ class WineClub {
 	}
 	
 	getClubsByLoggedInUser() {
-		console.log("get clubs by logged in user");
-		const getRequest = new Request("http://localhost:3000/clubs", {
-			method: "GET",
-			mode: "cors",
-			redirect: "follow",
-			credentials: "include",
-			headers: new Headers({ "Content-Type": "application/json"})
-		});
+		return new Promise(function (resolve, reject) {
+				console.log("get clubs by logged in user");
+				const getRequest = new Request("http://localhost:3000/user/clubs", {
+				method: "GET",
+				mode: "cors",
+				redirect: "follow",
+				credentials: "include",
+				headers: new Headers({ "Content-Type": "application/json"})
+			});
 
-		fetch(getRequest)
-			.then(response => {
-				return response.json();
-			})
-			.then(data => {
-				console.log(data);
-			})
-			.catch(errors => {
-				console.log(`could not post new entry: ${errors}`);
-			})
+			fetch(getRequest)
+				.then(response => {
+					return response.json();
+				})
+				.then(data => {
+					console.log(data);
+					resolve(data);
+				})
+				.catch(errors => {
+					console.log(`could not post new entry: ${errors}`);
+					reject(errors);
+				});
+		});
 	}
 }
 

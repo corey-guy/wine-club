@@ -238,6 +238,15 @@ function setSessionUsername(req, username) {
   console.log(req.session.data);
 }
 
+function getSessionUsername(req) {
+  if(!req.session.data) {
+    return "error";
+  }
+  else {
+    return req.session.data.username;
+  }
+}
+
 app.post("/club", (req, resp) => {
   console.log("you've hit the club endpoint");
   //console.log(req);
@@ -286,9 +295,20 @@ app.get('/club/:id', function(req, res) {
     });
 });
 
-app.get('/clubs', function(req, res) {
+app.get('/user/clubs', function(req, res) {
+  
   console.log("get clubs");
-  res.status(200).json();
+  let username = getSessionUsername(req);
+  if(username=="error") {
+    res.status(200).json("error");
+  }
+  else {
+    Club.find({ members: username }, function (err, docs) {
+      console.log(docs);
+      res.status(200).json(docs);
+    });
+  }
+
 });
 
 
