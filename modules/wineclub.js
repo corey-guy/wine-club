@@ -86,17 +86,17 @@ class WineClub {
 	}
 
 	loadCreateOrJoin() {
-		$("#main_div").load("./views/navigation.html");
-
+		$("#navigation_div").load("./views/navigation.html");
+		$("#main_div").empty();
 		$(document).on("click", "#createclub",  () => {
 			this.loadCreateClubForm();
-		})
+		});
 		$(document).on("click", "#joinclub", () => {
 			console.log("join league");
-		})
+		});
 		$(document).on("click", "#myclubs", () => {
 			this.showMyClubs();
-		})
+		});
 	}
 
 	loadCreateClubForm() {
@@ -125,11 +125,17 @@ class WineClub {
 		let clubs = await this.getClubsByLoggedInUser();
 		//form list
 		$("#main_div").load("./views/clubList.html", function() {
-			$("#clublistdiv").append("<ul id='clubList'></ul");
+			$("#clublistdiv").append("<ul id='clubList' class='tilesWrap'></ul>");
+			let number = 1;
+			console.log(clubs);
 			clubs.forEach(function (club) {
 				let clubId = club.name.split(' ').join('_');
-				$("#clubList").append(`<li id=${clubId}> ${club.name} </li>`);
+				$("#clubList").append(`<li id=${clubId}><h2>${number}</h2><h3>${club.name}</h3><p>Club Game: ${club.game}<br>Start Date: ${club.startdate} <br> Weeks: ${club.numWeeks}</p><button id="${clubId}_button">View Club</button></li>`);
+				number++;
 				//TODO - ADD EVENT HANDLERS FOR CLUB CLICKING
+				$(document).on('click', `#${clubId}_button`, (event) => {
+					console.log("you've clicked");
+				});
 			});
 			if(clubs.length == 0) {
 				$("#clubList").append(`you do not have any clubs`);
