@@ -247,6 +247,13 @@ function getSessionUsername(req) {
   }
 }
 
+function setSessionClub(req, clubId) {
+  if(req.session.data) {
+    req.session.data["currentClub"] = clubId;
+  }
+
+}
+
 app.post("/club", (req, resp) => {
   console.log("you've hit the club endpoint");
   //console.log(req);
@@ -286,10 +293,10 @@ app.get('/club/:id', function(req, res) {
     Club.findOne({ _id: req.params.id }, function(err, club) {
       if(err) return console.log(err);
       if(club == null) {
-        //this shouldn't happen
         res.status(403).json("error");
       }
       else {
+        setSessionClub(req, req.params.id);
         res.status(200).json(club);
       }
     });

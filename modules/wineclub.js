@@ -129,12 +129,14 @@ class WineClub {
 			let number = 1;
 			console.log(clubs);
 			clubs.forEach(function (club) {
-				let clubId = club.name.split(' ').join('_');
-				$("#clubList").append(`<li id=${clubId}><h2>${number}</h2><h3>${club.name}</h3><p>Club Game: ${club.game}<br>Start Date: ${club.startdate} <br> Weeks: ${club.numWeeks}</p><button id="${clubId}_button">View Club</button></li>`);
+				$("#clubList").append(`<li id=${club._id}><h2>${number}</h2><h3>${club.name}</h3><p>Club Game: ${club.game}<br>Start Date: ${club.startdate} <br> Weeks: ${club.numWeeks}</p><button id="${club._id}_button">View Club</button></li>`);
 				number++;
 				//TODO - ADD EVENT HANDLERS FOR CLUB CLICKING
-				$(document).on('click', `#${clubId}_button`, (event) => {
-					console.log("you've clicked");
+				$(document).on('click', `#${club._id}_button`, (event) => {
+					console.log(`you've clicked the button for ${club._id}`);
+					//is this the right way to solve this problem?
+					let wineclub = new WineClub();
+					wineclub.loadClubHome(club._id);
 				});
 			});
 			if(clubs.length == 0) {
@@ -147,21 +149,35 @@ class WineClub {
 
 	loadClubCalendar() {
 		//todo
+		console.log("load club calendar");
 
 	}
 
 	loadClubRoster() {
 		//todo
-		
+		console.log("load club roster");
+
 	}
 
 	loadAdjustYourWeek() {
 		//todo
+		console.log("load adjust week");
+
 	}
 
-	loadClubHome(id) {
+	loadClubHome = function(id) {
 		//TODO
+		console.log(id);
 		this.loadClubById(id);
+		$(document).on("click", "#clubcalendar",  () => {
+			this.loadClubCalendar();
+		});
+		$(document).on("click", "#clubroster", () => {
+			this.loadClubRoster();
+		});
+		$(document).on("click", "#editweeks", () => {
+			this.loadAdjustYourWeek();
+		});
 
 	}
 
@@ -183,6 +199,7 @@ class WineClub {
 			.then(data => {
 				console.log(data);
 				console.log("get club request complete");
+				$("#club_nav_div").load("./views/clubNav.html");
 				$("#main_div").html(`Club name: ${data.name} <br> Club game: ${data.game} <br> Start date: ${data.startdate}`)
 			})
 			.catch(errors => {
