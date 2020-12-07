@@ -130,13 +130,13 @@ class WineClub {
 
 			//create club Object
 			const formData = $("#joinform").serializeArray();
-
-			if(formData[0] == null) {
+			console.log(formData[0].value);
+			if(formData[0].value == null) {
 				$("#club_error_bar").html("EMPTY");;
 			}
 			else {
-				console.log("call to server");
-				this.postMember(formData[0]);
+				console.log("call to server with:" + formData[0].value);
+				this.postMember(formData[0].value);
 			}
 		})
 	}
@@ -223,6 +223,12 @@ class WineClub {
 			.then(data => {
 				console.log(data);
 				console.log("data");
+				if(data == "not a valid code" || data == "error") {
+					$("#join_error_bar").html("not a valid code");
+				}
+				if(data == "already_member") {
+					$("#join_error_bar").html("You are already in this club");
+				}
 			})
 			.catch(errors => {
 				console.log(`could not post member: ${errors}`);

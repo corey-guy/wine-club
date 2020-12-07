@@ -288,9 +288,35 @@ app.post("/club", (req, resp) => {
    });
 });
 
-app.post("/club/roster", (req, resp) => {
+app.post("/club/roster", (req, res) => {
   console.log("You've hit the add member endpoint");
-  resp.status(200).json("hehehe");
+  console.log(req.body);
+  Club.findOne({ _id: req.body.id }, function(err, club) {
+    if(err) {
+      res.status(403).json("not a valid code");
+      return console.log(err);
+    }
+    if(club == null) {
+      res.status(403).json("error");
+    }
+    else {
+      console.log(club.members);
+      console.log(req.session.data.username);
+      if(club.members.includes(req.session.data.username)) {
+        res.status(403).json("already_member");
+      }
+      else {
+        club.members.push(req.session.data.username);
+        club.save(function(err,club) {
+          if(err) return console.logg(err);
+          console.log(club);
+          console.log("member added!");
+          res.status(200).json(club);
+
+        })
+      }
+    }
+  })
 });
 
 app.get('/club/:id', function(req, res) {
