@@ -302,6 +302,18 @@ app.get('/club/:id', function(req, res) {
     });
 });
 
+app.get('/club/roster/:id', function(req, res) {
+    Club.findOne({ _id: req.params.id }, function(err, club) {
+      if(err) return console.log(err);
+      if(club == null) {
+        res.status(403).json("error");
+      }
+      else {
+        res.status(200).json(club.members);
+      }
+    });
+});
+
 app.get('/user/clubs', function(req, res) {
   
   console.log("get clubs");

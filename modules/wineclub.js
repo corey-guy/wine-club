@@ -154,13 +154,14 @@ class WineClub {
 		this.loadClubCalendarById(id);
 	}
 
-	loadClubRoster() {
+	loadClubRoster(id) {
 		//todo
 		console.log("load club roster");
+		this.getClubRosterById(id)
 
 	}
 
-	loadAdjustYourWeek() {
+	loadAdjustYourWeek(id) {
 		//todo
 		console.log("load adjust week");
 
@@ -172,19 +173,52 @@ class WineClub {
 		this.loadClubById(id);
 		this.loadClubCalendar(id);
 		$(document).on("click", "#clubcalendar",  () => {
-			this.loadClubCalendar();
+			this.loadClubCalendar(id);
 		});
 		$(document).on("click", "#clubroster", () => {
-			this.loadClubRoster();
+			this.loadClubRoster(id);
 		});
 		$(document).on("click", "#editweeks", () => {
-			this.loadAdjustYourWeek();
+			this.loadAdjustYourWeek(id);
 		});
 
 	}
 
 	//--------------------------------- API -----------------------------//
 	
+	getClubRosterById(id) {
+
+		console.log("id: " + id);
+
+		const getRequest = new Request("http://localhost:3000/club/roster/" + id, {
+			method: "GET",
+			mode: "cors",
+			redirect: "follow",
+			credentials: "include",
+			headers: new Headers({ "Content-Type": "application/json" })
+		});
+
+		fetch(getRequest)
+			.then(response => {
+				return response.json();
+			})
+			.then(data => {
+				console.log(data);
+				let html = "<b>Club Roster</b><br><table class='pure-table'><tr><th>Username</th>"
+
+				for(let x = 0; x < data.length; x++) {
+					console.log(data[x]);
+					html += `<tr><td>${data[x]}</td></tr>`;
+				}
+
+				html += "</table>";
+			 	$("#main_div").html(html);
+			})
+			.catch(errors => {
+				console.log(`could not get club: ${errors}`);
+			});
+	}
+
 	loadClubCalendarById(id) {
 		const getRequest = new Request("http://localhost:3000/club/" + id, {
 			method: "GET",
@@ -201,7 +235,7 @@ class WineClub {
 			.then(data => {
 				console.log(data);
 				console.log("get club request complete");
-				let html = "<table class='pure-table'><tr><th>Week</th><th>Captain of the Week</th><th>Date</th><th>Load Out</th>"
+				let html = "<b>Club Calendar</b><table class='pure-table'><tr><th>Week</th><th>Captain of the Week</th><th>Date</th><th>Load Out</th>"
 				for( let x = 0; x < data.numWeeks; x++ ) {
 					//generate table row
 					let date = this.calculateDate(data.startdate, x);
