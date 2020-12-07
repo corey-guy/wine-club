@@ -42,6 +42,19 @@ div[class*=box] {
 	cursor: pointer;
 }
 
+/* TABLES */
+table, th, td {
+	border: 1px black solid;
+
+}
+
+th {
+	text-align: left;
+}
+
+td {
+	text-align: center;
+}
 /* 
 ========================
       BUTTON ONE

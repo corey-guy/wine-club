@@ -147,10 +147,11 @@ class WineClub {
 
 	}
 
-	loadClubCalendar() {
+	loadClubCalendar(id) {
 		//todo
 		console.log("load club calendar");
-
+		//create a table the size of weeks for club
+		this.loadClubCalendarById(id);
 	}
 
 	loadClubRoster() {
@@ -169,6 +170,7 @@ class WineClub {
 		//TODO
 		console.log(id);
 		this.loadClubById(id);
+		this.loadClubCalendar(id);
 		$(document).on("click", "#clubcalendar",  () => {
 			this.loadClubCalendar();
 		});
@@ -183,6 +185,42 @@ class WineClub {
 
 	//--------------------------------- API -----------------------------//
 	
+	loadClubCalendarById(id) {
+		const getRequest = new Request("http://localhost:3000/club/" + id, {
+			method: "GET",
+			mode: "cors",
+			redirect: "follow",
+			credentials: "include",
+			headers: new Headers({ "Content-Type": "application/json" })
+		});
+
+		fetch(getRequest)
+			.then(response => {
+				return response.json();
+			})
+			.then(data => {
+				console.log(data);
+				console.log("get club request complete");
+				let html = "<table class='pure-table'><tr><th>Week</th><th>Captain of the Week</th><th>Date</th><th>Load Out</th>"
+				for( let x = 0; x < data.numWeeks; x++ ) {
+					//generate table row
+					let date = this.calculateDate(data.startdate, x);
+					html += `<tr><td>${x+1}</td><td>hey</td><td>${date}</td><td>hey</td></tr>`;
+				}
+				html += "</table>";
+				console.log(html);
+				$("#main_div").html(html);
+			})
+			.catch(errors => {
+				console.log(`could not get club: ${errors}`);
+			});
+		
+	}
+	calculateDate(startDate, weeks) {
+		let now = new Date(startDate);
+		now.setDate(now.getDate() + weeks * 7);
+		return now.toDateString();
+	}
 	loadClubById(id) {
 		const getRequest = new Request("http://localhost:3000/club/" + id, {
 			method: "GET",
@@ -200,7 +238,6 @@ class WineClub {
 				console.log(data);
 				console.log("get club request complete");
 				$("#club_nav_div").load("./views/clubNav.html");
-				$("#main_div").html(`Club name: ${data.name} <br> Club game: ${data.game} <br> Start date: ${data.startdate}`)
 			})
 			.catch(errors => {
 				console.log(`could not get club: ${errors}`);
