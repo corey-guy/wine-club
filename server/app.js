@@ -288,6 +288,11 @@ app.post("/club", (req, resp) => {
    });
 });
 
+app.post("/club/roster", (req, resp) => {
+  console.log("You've hit the add member endpoint");
+  resp.status(200).json("hehehe");
+});
+
 app.get('/club/:id', function(req, res) {
     console.log(req.params.id);
     Club.findOne({ _id: req.params.id }, function(err, club) {

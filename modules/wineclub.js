@@ -136,6 +136,7 @@ class WineClub {
 			}
 			else {
 				console.log("call to server");
+				this.postMember(formData[0]);
 			}
 		})
 	}
@@ -206,6 +207,28 @@ class WineClub {
 
 	//--------------------------------- API -----------------------------//
 	
+	postMember(clubId) {
+		const postRequest = new Request("http://localhost:3000/club/roster", {
+			method: "POST",
+			mode: "cors",
+			redirect: "follow",
+			credentials: "include",
+			headers: new Headers({ "Content-Type": "application/json" }),
+			body: JSON.stringify({id: clubId})
+		});
+		fetch(postRequest)
+			.then(response => {
+				return response.json();
+			})
+			.then(data => {
+				console.log(data);
+				console.log("data");
+			})
+			.catch(errors => {
+				console.log(`could not post member: ${errors}`);
+			})
+	}
+
 	getClubRosterById(id) {
 
 		console.log("id: " + id);
