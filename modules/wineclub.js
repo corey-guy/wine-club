@@ -93,6 +93,7 @@ class WineClub {
 		});
 		$(document).on("click", "#joinclub", () => {
 			console.log("join league");
+			this.loadJoinClubForm();
 		});
 		$(document).on("click", "#myclubs", () => {
 			this.showMyClubs();
@@ -116,6 +117,25 @@ class WineClub {
 				let newClub = new Club(formData[0].value, formData[1].value,
 									 formData[2].value, formData[3].value);
 				this.createClub(newClub);
+			}
+		})
+	}
+
+	loadJoinClubForm() {
+		$("#main_div").load("./views/joinClubForm.html");
+
+		$(document).on('submit', '#joinform', (event) => {
+			$("#join_error_bar").empty();
+			event.preventDefault();
+
+			//create club Object
+			const formData = $("#joinform").serializeArray();
+
+			if(formData[0] == null) {
+				$("#club_error_bar").html("EMPTY");;
+			}
+			else {
+				console.log("call to server");
 			}
 		})
 	}
